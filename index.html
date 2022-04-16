@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Fighting Game</title>
+</head>
+<body>
+	<canvas id='game'></canvas>
+	<script type="module">
+		import Game from "./src/Game.js"
+
+		document.querySelector("body").onload = () => {
+			const game = new Game()
+			game.init()
+			game.start()
+		}
+	</script>
+</body>
+</html>
