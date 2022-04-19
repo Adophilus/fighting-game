@@ -94,6 +94,7 @@ class Sprite {
   // handle sprite movement
   move(params = {}) {
     let { debug, force } = params
+
     this.moveUp({ debug })
     this.moveDown({ debug })
     this.moveLeft({ debug })
@@ -103,10 +104,8 @@ class Sprite {
   moveUp({ force, vel, debug }) {
     if (this.JUMPING > 0) {
       let newPos = this.position[1] - (vel || 30)
-      // if (this.game.canGo({ object: this, position: [this.position[0], newPos]})) {
       this.position[1] = newPos
       this.JUMPING -= 30
-      // }
     } else {
       this.JUMPING = 0
     }
@@ -114,6 +113,7 @@ class Sprite {
     if (this.MOVING.up || force) {
       if (!this.AIRBORNE) {
         this.JUMPING = 300
+        this.AIRBORNE = true
       }
     }
   }
@@ -129,15 +129,11 @@ class Sprite {
 
       if (!canGo.status && canGo.reason.height > this.game.HEIGHT) {
         this.position[1] = this.game.HEIGHT - this.HEIGHT
+        this.AIRBORNE = false
       } else if (!canGo.status && canGo.reason instanceof Sprite) {
+        this.AIRBORNE = false
       } else {
         this.position[1] = newPos
-      }
-
-      if (this.position[1] + this.HEIGHT < this.game.HEIGHT) {
-        this.AIRBORNE = true
-      } else {
-        this.AIRBORNE = false
       }
     }
   }
