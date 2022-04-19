@@ -26,6 +26,7 @@ class Sprite {
   ATTACKING = false
   ATTACKED = false
   FACING = 1
+  DEBUG = false
 
   constructor({ game, position, vel, controls }) {
     this.game = game
@@ -91,17 +92,21 @@ class Sprite {
   }
 
   // handle sprite movement
-  move() {
-    this.moveUp()
-    this.moveDown()
-    this.moveLeft()
-    this.moveRight()
+  move(params = {}) {
+    let { debug, force } = params
+    this.moveUp({ debug })
+    this.moveDown({ debug })
+    this.moveLeft({ debug })
+    this.moveRight({ debug })
   }
 
-  moveUp(force = false) {
+  moveUp({ force, vel, debug }) {
     if (this.JUMPING > 0) {
-      this.position[1] -= 30
+      let newPos = this.position[1] - (vel || 30)
+      // if (this.game.canGo({ object: this, position: [this.position[0], newPos]})) {
+      this.position[1] = newPos
       this.JUMPING -= 30
+      // }
     } else {
       this.JUMPING = 0
     }
@@ -113,80 +118,78 @@ class Sprite {
     }
   }
 
-  moveDown(force = false) {}
+  moveDown({ force, vel, debug }) {
+    if (this.MOVING.down || force) {
+      let newPos = this.position[1] + (vel || this.VEL)
+      let canGo = this.game.canGo({
+        object: this,
+        position: [this.position[0], newPos],
+        reason: true
+      })
 
-  moveLeft(force = false) {
+      if (!canGo.status && canGo.reason.height > this.game.HEIGHT) {
+        this.position[1] = this.game.HEIGHT - this.HEIGHT
+      } else if (!canGo.status && canGo.reason instanceof Sprite) {
+      } else {
+        this.position[1] = newPos
+      }
+
+      if (this.position[1] + this.HEIGHT < this.game.HEIGHT) {
+        this.AIRBORNE = true
+      } else {
+        this.AIRBORNE = false
+      }
+    }
+  }
+
+  moveLeft({ force, vel, debug }) {
     if (this.MOVING.left || force) {
-      if (this.position[0] - this.VEL >= 0) {
-        this.position[0] -= this.VEL
+      let newPos = this.position[0] - (vel || this.VEL)
+      if (
+        this.game.canGo({
+          object: this,
+          position: [newPos, this.position[1]],
+          debug
+        })
+      ) {
+        this.position[0] -= vel || this.VEL
       }
       this.FACING = -1
     }
   }
 
-  moveRight(force = false) {
+  moveRight({ force, vel, debug }) {
     if (this.MOVING.right || force) {
-      let newPos = this.position[0] + this.VEL
-      if (this.canGo([newPos, this.position[1]])) {
-        this.position[0] += this.VEL
+      let newPos = this.position[0] + (vel || this.VEL)
+      if (
+        this.game.canGo({
+          object: this,
+          position: [newPos, this.position[1]],
+          debug
+        })
+      ) {
+        this.position[0] += vel || this.VEL
       }
       this.FACING = 1
     }
   }
 
   // handle attack
-  attack(force = false) {
+  attack(params = {}) {
+    let { force } = params
     if (this.ATTACKING || force) {
       this.attackBox.draw()
     }
   }
 
-  canGo(position) {
-    let objects = new Array(
-      ...this.game.OBJECTS,
-      ...this.game.ENEMIES,
-      ...this.game.PLAYERS
-    )
-    for (let o of objects) {
-      if (this.equals(o)) {
-        continue
-      }
-
-      if (
-        ((position[0] >= o.position[0] &&
-          position[0] <= o.position[0] + o.WIDTH) ||
-          (o.position[0] <= position[0] &&
-            o.position[0] + o.WIDTH >= this.position[0])) &&
-        position[1] <= o.position[1] &&
-        position[1] + this.WIDTH <= o.position[1]
-      ) {
-        return false
-      } else if (
-        position[0] + this.WIDTH >= o.position[0] &&
-        position[0] + this.WIDTH <= o.position[0] + o.WIDTH &&
-        position[1] + this.HEIGHT >= o.position[0] &&
-        position[1] + this.HEIGHT <= o.position[0] + o.HEIGHT
-      ) {
-        return false
-      }
-    }
-
-    if (position[0] >= 0 && position[0] + this.WIDTH <= this.game.WIDTH) {
-      if (position[1] >= 0 && position[1] + this.HEIGHT <= this.game.HEIGHT) {
-        return true
-      }
-    }
-
-    return false
-  }
-
   // handle animation and collisions
-  draw() {
+  draw(params = {}) {
+    let { debug } = params
     // handle movement
-    this.move()
+    this.move({ debug })
 
     // handle attack
-    this.attack()
+    this.attack({ debug })
 
     // draw collision border
     this.game.context.fillStyle = 'deepskyblue'
@@ -201,22 +204,7 @@ class Sprite {
     this.game.context.fillRect(...this.position, this.WIDTH, this.HEIGHT)
 
     // handle gravity
-    if (this.position[1] + this.HEIGHT < this.game.HEIGHT) {
-      let newPos = this.position[1] + this.GRAVITY
-
-      if (
-        newPos < this.game.HEIGHT - this.HEIGHT &&
-        this.canGo([this.position[0], newPos])
-      ) {
-        this.position[1] = newPos
-      } else {
-        this.position[1] = this.game.HEIGHT - this.HEIGHT
-      }
-
-      this.AIRBORNE = true
-    } else {
-      this.AIRBORNE = false
-    }
+    this.moveDown({ force: true, vel: this.GRAVITY })
   }
 }
 
