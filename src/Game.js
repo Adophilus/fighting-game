@@ -50,20 +50,14 @@ class Game {
       }
 
       if (
-        position[0] >= o.position[0] &&
-        position[0] <= o.position[0] + o.WIDTH &&
-        position[1] >= o.position[1] &&
-        position[1] <= o.position[1] + o.HEIGHT
-      ) {
-        if (reason) {
-          return { status: false, reason: o }
-        }
-        return false
-      } else if (
+        // position[0] >= o.position[0] &&
+        // position[0] <= o.position[0] + o.WIDTH &&
+        // position[1] >= o.position[1] &&
+        // position[1] <= o.position[1] + o.HEIGHT
         position[0] + object.WIDTH >= o.position[0] &&
-        position[0] + object.WIDTH <= o.position[0] + o.WIDTH &&
+        position[0] <= o.position[0] + o.WIDTH &&
         position[1] + object.HEIGHT >= o.position[1] &&
-        position[1] + object.HEIGHT <= o.position[1] + o.HEIGHT
+        position[1] <= o.position[1] + o.HEIGHT 
       ) {
         if (reason) {
           return { status: false, reason: o }
