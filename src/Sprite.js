@@ -1,4 +1,5 @@
 import AttackBox from './AttackBox.js'
+import HealthBar from './HealthBar.js'
 
 class Sprite {
   static ID = 0
@@ -34,6 +35,7 @@ class Sprite {
     this.VEL = vel ? vel : this.VEL
     this.CONTROLS = controls ? controls : this.CONTROLS
     this.attackBox = new AttackBox({ sprite: this, game })
+    this.healthBar = new HealthBar({ sprite: this, game })
     this.assignId()
 
     this.hookKeys()
@@ -196,8 +198,12 @@ class Sprite {
       this.HEIGHT
     )
 
+    // draw sprite
     this.game.context.fillStyle = 'red'
     this.game.context.fillRect(...this.position, this.WIDTH, this.HEIGHT)
+
+    // draw healthBar
+    this.healthBar.draw()
 
     // handle gravity
     this.moveDown({ force: true, vel: this.GRAVITY })
