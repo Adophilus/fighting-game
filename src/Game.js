@@ -25,7 +25,7 @@ class Game {
         game: this
       }),
       new Sprite({
-        position: [100, 300],
+        position: [300, 0],
         game: this,
         controls: {
           up: 'ArrowUp',
@@ -42,12 +42,17 @@ class Game {
     this.animate()
   }
 
-  canGo({ object, position, debug, reason }) {
+  canGo({ object, position, debug, reason, exclude }) {
     let objects = new Array(...this.OBJECTS, ...this.ENEMIES, ...this.PLAYERS)
 
     for (let o of objects) {
-      if (object.equals(o)) {
+      if (o.equals(object)) {
         continue
+      }
+      if (exclude) {
+        if (exclude.find((_o) => o.equals(_o))) {
+          continue
+        }
       }
 
       if (
@@ -107,6 +112,29 @@ class Game {
     return true
   }
 
+  initiateAttack({ initiator, atk }) {
+    let objects = new Array(...this.OBJECTS, ...this.ENEMIES, ...this.PLAYERS)
+
+    for (let o of objects) {
+      if (initiator.equals(o)) {
+        continue
+      }
+
+      let canStayInPosition = this.canGo({
+        object: initiator.attackBox,
+        position: initiator.attackBox.position,
+        reason: true,
+        exclude: [initiator]
+      })
+      if (
+        !canStayInPosition.status &&
+        canStayInPosition.reason instanceof Sprite
+      ) {
+        canStayInPosition.reason.receiveAttack(atk)
+      }
+    }
+  }
+
   draw() {
     this.context.fillStyle = 'black'
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height)
@@ -115,9 +143,29 @@ class Game {
   animate() {
     this.draw()
 
-    new Array(...this.OBJECTS, ...this.ENEMIES, ...this.PLAYERS).forEach((o) =>
-      o.draw()
-    )
+    this.OBJECTS.forEach((o, i) => {
+      if (o.HEALTH) {
+        o.draw()
+      } else {
+        this.OBJECTS.pop(i)
+      }
+    })
+
+    this.ENEMIES.forEach((o, i) => {
+      if (o.HEALTH) {
+        o.draw()
+      } else {
+        this.ENEMIES.pop(i)
+      }
+    })
+
+    this.PLAYERS.forEach((o, i) => {
+      if (o.HEALTH) {
+        o.draw()
+      } else {
+        this.PLAYERS.pop(i)
+      }
+    })
 
     window.requestAnimationFrame(() => this.animate())
   }

@@ -28,6 +28,10 @@ class Sprite {
   ATTACKED = false
   FACING = 1
   DEBUG = false
+  STATS = {
+    ATK: 10
+  }
+  FIRST_DRAW = true
 
   constructor({ game, position, vel, controls }) {
     this.game = game
@@ -36,14 +40,28 @@ class Sprite {
     this.CONTROLS = controls ? controls : this.CONTROLS
     this.attackBox = new AttackBox({ sprite: this, game })
     this.healthBar = new HealthBar({ sprite: this, game })
-    this.assignId()
-
-    this.hookKeys()
+    this.__assignId()
+    this.__initHealth()
+    this.__hookKeys()
   }
 
-  assignId() {
-    this.id = this.constructor.ID
-    this.constructor.ID += 1
+  __assignId() {
+    this.id = ++this.constructor.ID
+  }
+
+  __initHealth() {
+    this.health = {
+      decrease: (amount) => {
+        if (this.HEALTH > 0) {
+          this.HEALTH -= amount
+        }
+      },
+      increase: (amount) => {
+        if (this.HEALTH < 100) {
+          this.HEALTH = this.HEALTH + amount > 100 ? 100 : this.HEALTH + amount
+        }
+      }
+    }
   }
 
   equals(obj) {
@@ -51,7 +69,7 @@ class Sprite {
   }
 
   // handle key events
-  hookKeys() {
+  __hookKeys() {
     window.addEventListener('keydown', (event) => {
       // console.log(event.key);
 
@@ -93,6 +111,15 @@ class Sprite {
     })
   }
 
+  __showHealthBar() {
+    this.healthBar.SHOW = true
+    setTimeout(() => {
+      if (this.healthBar.SHOW) {
+        this.healthBar.SHOW = false
+      }
+    }, 4000)
+  }
+
   // handle sprite movement
   move(params = {}) {
     let { debug, force } = params
@@ -112,6 +139,10 @@ class Sprite {
       this.JUMPING = 0
     }
 
+    if (this.MOVING.up) {
+      this.__showHealthBar()
+    }
+
     if (this.MOVING.up || force) {
       if (!this.AIRBORNE) {
         this.JUMPING = 300
@@ -121,6 +152,10 @@ class Sprite {
   }
 
   moveDown({ force, vel, debug }) {
+    if (this.MOVING.down) {
+      this.__showHealthBar()
+    }
+
     if (this.MOVING.down || force) {
       let newPos = this.position[1] + (vel || this.VEL)
       let canGo = this.game.canGo({
@@ -141,6 +176,10 @@ class Sprite {
   }
 
   moveLeft({ force, vel, debug }) {
+    if (this.MOVING.left) {
+      this.__showHealthBar()
+    }
+
     if (this.MOVING.left || force) {
       let newPos = this.position[0] - (vel || this.VEL)
       if (
@@ -157,6 +196,10 @@ class Sprite {
   }
 
   moveRight({ force, vel, debug }) {
+    if (this.MOVING.right) {
+      this.__showHealthBar()
+    }
+
     if (this.MOVING.right || force) {
       let newPos = this.position[0] + (vel || this.VEL)
       if (
@@ -176,13 +219,25 @@ class Sprite {
   attack(params = {}) {
     let { force } = params
     if (this.ATTACKING || force) {
+      this.game.initiateAttack({ initiator: this, atk: this.STATS.ATK })
       this.attackBox.draw()
     }
+  }
+
+  receiveAttack(atk) {
+    this.__showHealthBar()
+    this.health.decrease(atk)
   }
 
   // handle animation and collisions
   draw(params = {}) {
     let { debug } = params
+
+    if (this.FIRST_DRAW) {
+      this.FIRST_DRAW = false
+      this.__showHealthBar()
+    }
+
     // handle movement
     this.move({ debug })
 
