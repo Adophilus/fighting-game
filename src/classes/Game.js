@@ -1,11 +1,18 @@
 import Sprite from './Sprite.js'
+import SpriteAttack from '../mixins/SpriteAttack.js'
+import SpriteHealth from '../mixins/SpriteHealth.js'
+import SpriteMovement from '../mixins/SpriteMovement.js'
+import SpriteStats from '../mixins/SpriteStats.js'
 
 class Game {
+  static OBJECTS_COUNT = 0
+
   WIDTH = 500 // 1024
   HEIGHT = 500 // 576
   PLAYERS = []
   ENEMIES = []
   OBJECTS = []
+  GRAVITY = 9.8
 
   constructor() {
     this.canvas = document.querySelector('#game')
@@ -22,23 +29,52 @@ class Game {
     this.PLAYERS = [
       new Sprite({
         position: [100, 0],
-        game: this
+        game: this,
+        mixins: [
+          [SpriteHealth],
+          [SpriteAttack],
+          [SpriteStats],
+          [
+            SpriteMovement,
+            [
+              {
+                controls: {
+                  up: 'ArrowUp',
+                  down: 'ArrowDown',
+                  left: 'ArrowLeft',
+                  right: 'ArrowRight',
+                  attack: 'Insert'
+                }
+              }
+            ]
+          ]
+        ]
       }),
       new Sprite({
         position: [300, 0],
         game: this,
-        controls: {
-          up: 'ArrowUp',
-          down: 'ArrowDown',
-          left: 'ArrowLeft',
-          right: 'ArrowRight',
-          attack: 'Insert'
-        }
+        mixins: [
+          [SpriteHealth],
+          [SpriteAttack],
+          [SpriteStats],
+          [
+            SpriteMovement,
+            [
+              {
+                controls: {
+                  up: 'w',
+                  down: 's',
+                  left: 'a',
+                  right: 'd',
+                  attack: 'f'
+                }
+              }
+            ]
+          ]
+        ]
       })
     ]
-    this.PLAYERS[0].DEBUG = true
 
-    window.playerHealthBar = this.PLAYERS[0].healthBar
     this.animate()
   }
 
@@ -144,27 +180,39 @@ class Game {
     this.draw()
 
     this.OBJECTS.forEach((o, i) => {
-      if (o.HEALTH) {
-        o.draw()
-      } else {
-        this.OBJECTS.pop(i)
+      if (!o.HEALTH) {
+        this.OBJECTS.splice(i, 1)
+        return
       }
+
+      o.draw()
+
+      // handle gravity
+      o.moveDown({ force: true, vel: this.GRAVITY })
     })
 
     this.ENEMIES.forEach((o, i) => {
-      if (o.HEALTH) {
-        o.draw()
-      } else {
-        this.ENEMIES.pop(i)
+      if (!o.HEALTH) {
+        this.ENEMIES.splice(i, 1)
+        return
       }
+
+      o.draw()
+
+      // handle gravity
+      o.moveDown({ force: true, vel: this.GRAVITY })
     })
 
     this.PLAYERS.forEach((o, i) => {
-      if (o.HEALTH) {
-        o.draw()
-      } else {
-        this.PLAYERS.pop(i)
+      if (!o.HEALTH) {
+        this.PLAYERS.splice(i, 1)
+        return
       }
+
+      o.draw()
+
+      // handle gravity
+      o.moveDown({ force: true, vel: this.GRAVITY })
     })
 
     window.requestAnimationFrame(() => this.animate())

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="./src/style.css" />
+    <link rel="stylesheet" href="./src/styles/style.css" />
     <title>Fighting Game</title>
   </head>
   <body>
@@ -9,7 +9,7 @@
       <canvas id="game"></canvas>
     </div>
     <script type="module">
-      import Game from './src/Game.js'
+      import Game from './src/classes/Game.js'
 
       document.querySelector('body').onload = () => {
         const game = new Game()
