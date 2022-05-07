@@ -1,6 +1,7 @@
 import Sprite from './Sprite.js'
 import Fighter from '../utils/Fighter.js'
 import Background from '../utils/Background.js'
+import Shop from '../utils/Shop.js'
 
 class Game {
   static OBJECTS_COUNT = 0
@@ -13,6 +14,9 @@ class Game {
   OBJECTS = []
   NPCS = []
   GRAVITY = 9.8
+  FRAME = {
+    ELAPSED: 0
+  }
 
   constructor() {
     this.canvas = document.querySelector('#game')
@@ -26,7 +30,7 @@ class Game {
   }
 
   start() {
-    this.NPCS = [new Background({ game: this })]
+    this.NPCS = [new Background({ game: this }), new Shop({ game: this })]
 
     this.PLAYERS = [
       new Fighter({
@@ -200,6 +204,8 @@ class Game {
 
       o.draw()
     })
+
+    this.FRAME.ELAPSED++
 
     window.requestAnimationFrame(() => this.animate())
   }

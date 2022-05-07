@@ -1,6 +1,6 @@
 const debug = false
 
-export default function ({ img }) {
+export default function ({ img, dimensions, crop, scale = 1, animation }) {
   // handle drawing
   let draw = this.draw
   this.draw = () => {
@@ -12,6 +12,23 @@ export default function ({ img }) {
     } else {
       image.src = img
     }
-    this.game.context.drawImage(image, ...this.position)
+
+    let params = [image, ...this.position]
+
+    if (animation) {
+      animation.apply(this, [{ params, crop, dimensions }])
+    }
+
+    if (crop) {
+      params.splice(1, 2)
+      params.push(...crop)
+      params.push(...this.position)
+    }
+    if (dimensions) {
+      params.push(dimensions[0] * scale)
+      params.push(dimensions[1] * scale)
+    }
+
+    this.game.context.drawImage(...params)
   }
 }
