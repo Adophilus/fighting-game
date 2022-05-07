@@ -1,8 +1,5 @@
 import Sprite from './Sprite.js'
-import SpriteAttack from '../mixins/SpriteAttack.js'
-import SpriteHealth from '../mixins/SpriteHealth.js'
-import SpriteMovement from '../mixins/SpriteMovement.js'
-import SpriteStats from '../mixins/SpriteStats.js'
+import Fighter from '../utils/Fighter.js'
 
 class Game {
   static OBJECTS_COUNT = 0
@@ -27,51 +24,27 @@ class Game {
 
   start() {
     this.PLAYERS = [
-      new Sprite({
+      new Fighter({
+        game: this,
         position: [100, 0],
-        game: this,
-        mixins: [
-          [SpriteHealth],
-          [SpriteAttack],
-          [SpriteStats],
-          [
-            SpriteMovement,
-            [
-              {
-                controls: {
-                  up: 'ArrowUp',
-                  down: 'ArrowDown',
-                  left: 'ArrowLeft',
-                  right: 'ArrowRight',
-                  attack: 'Insert'
-                }
-              }
-            ]
-          ]
-        ]
+        controls: {
+          up: 'ArrowUp',
+          down: 'ArrowDown',
+          left: 'ArrowLeft',
+          right: 'ArrowRight',
+          attack: 'Insert'
+        }
       }),
-      new Sprite({
-        position: [300, 0],
+      new Fighter({
         game: this,
-        mixins: [
-          [SpriteHealth],
-          [SpriteAttack],
-          [SpriteStats],
-          [
-            SpriteMovement,
-            [
-              {
-                controls: {
-                  up: 'w',
-                  down: 's',
-                  left: 'a',
-                  right: 'd',
-                  attack: 'f'
-                }
-              }
-            ]
-          ]
-        ]
+        position: [300, 0],
+        controls: {
+          up: 'w',
+          down: 's',
+          left: 'a',
+          right: 'd',
+          attack: 'f'
+        }
       })
     ]
 
@@ -185,10 +158,10 @@ class Game {
         return
       }
 
-      o.draw()
-
       // handle gravity
       o.moveDown({ force: true, vel: this.GRAVITY })
+
+      o.draw()
     })
 
     this.ENEMIES.forEach((o, i) => {
@@ -197,10 +170,10 @@ class Game {
         return
       }
 
-      o.draw()
-
       // handle gravity
       o.moveDown({ force: true, vel: this.GRAVITY })
+
+      o.draw()
     })
 
     this.PLAYERS.forEach((o, i) => {
@@ -209,10 +182,10 @@ class Game {
         return
       }
 
-      o.draw()
-
       // handle gravity
       o.moveDown({ force: true, vel: this.GRAVITY })
+
+      o.draw()
     })
 
     window.requestAnimationFrame(() => this.animate())

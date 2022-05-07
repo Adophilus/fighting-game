@@ -1,3 +1,5 @@
+import Sprite from '../classes/Sprite.js'
+
 const debug = false
 
 export default function ({ vel, controls }) {
