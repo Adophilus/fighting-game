@@ -30,6 +30,8 @@ class Game {
   }
 
   start() {
+    this.GROUND = this.HEIGHT - 96
+
     this.NPCS = [new Background({ game: this }), new Shop({ game: this })]
 
     this.PLAYERS = [
