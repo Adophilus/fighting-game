@@ -27,25 +27,7 @@ class Sprite {
   }
 
   // handle animation and collisions
-  draw() {
-    if (this.FIRST_DRAW) {
-      this.FIRST_DRAW = false
-      this.__showHealthBar()
-    }
-
-    // draw collision border
-    this.game.context.fillStyle = 'deepskyblue'
-    this.game.context.fillRect(
-      this.position[0] - 2,
-      this.position[1] - 2,
-      this.WIDTH + 4,
-      this.HEIGHT
-    )
-
-    // draw sprite
-    this.game.context.fillStyle = 'red'
-    this.game.context.fillRect(...this.position, this.WIDTH, this.HEIGHT)
-  }
+  draw() {}
 }
 
 export default Sprite

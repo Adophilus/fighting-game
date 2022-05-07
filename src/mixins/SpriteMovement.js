@@ -94,7 +94,7 @@ export default function ({ vel, controls }) {
       })
 
       if (!canGo.status && canGo.reason.height > this.game.HEIGHT) {
-        this.position[1] = this.game.HEIGHT - this.HEIGHT
+        this.position[1] = canGo.available[1]
         this.AIRBORNE = false
       } else if (!canGo.status && canGo.reason instanceof Sprite) {
         this.AIRBORNE = false

@@ -32,6 +32,11 @@ export default function () {
   this.draw = () => {
     draw.apply(this)
 
+    if (this.FIRST_DRAW) {
+      this.FIRST_DRAW = false
+      this.__showHealthBar()
+    }
+
     this.healthBar.draw()
   }
 

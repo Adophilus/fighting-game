@@ -1,14 +1,17 @@
 import Sprite from './Sprite.js'
 import Fighter from '../utils/Fighter.js'
+import Background from '../utils/Background.js'
 
 class Game {
   static OBJECTS_COUNT = 0
 
-  WIDTH = 500 // 1024
-  HEIGHT = 500 // 576
+  WIDTH = 900 // 1024
+  HEIGHT = 576
+  GROUND = this.HEIGHT
   PLAYERS = []
   ENEMIES = []
   OBJECTS = []
+  NPCS = []
   GRAVITY = 9.8
 
   constructor() {
@@ -23,6 +26,8 @@ class Game {
   }
 
   start() {
+    this.NPCS = [new Background({ game: this })]
+
     this.PLAYERS = [
       new Fighter({
         game: this,
@@ -81,6 +86,7 @@ class Game {
       if (reason) {
         return {
           status: false,
+          available: [0, object.position[1]],
           reason: { width: -1 }
         }
       }
@@ -89,6 +95,7 @@ class Game {
       if (reason) {
         return {
           status: false,
+          available: [this.WIDTH - object.WIDTH, object.position[1]],
           reason: { width: this.WIDTH + 1 }
         }
       }
@@ -99,14 +106,16 @@ class Game {
       if (reason) {
         return {
           status: false,
+          available: [object.position[0], 0],
           reason: { height: -1 }
         }
       }
       return false
-    } else if (position[1] + object.HEIGHT > this.HEIGHT) {
+    } else if (position[1] + object.HEIGHT > this.GROUND) {
       if (reason) {
         return {
           status: false,
+          available: [object.position[0], this.GROUND - object.HEIGHT],
           reason: { height: this.HEIGHT + 1 }
         }
       }
@@ -151,6 +160,10 @@ class Game {
 
   animate() {
     this.draw()
+
+    this.NPCS.forEach((o) => {
+      o.draw()
+    })
 
     this.OBJECTS.forEach((o, i) => {
       if (!o.HEALTH) {
