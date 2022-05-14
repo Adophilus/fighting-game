@@ -7,10 +7,13 @@ import SpriteMovement from '../mixins/SpriteMovement.js'
 import SpriteStats from '../mixins/SpriteStats.js'
 
 export default function ({ game, position, controls }) {
+  // 1600 x 200
+  
   let image = {
-    width: 118,
-    height: 128,
-    offset: [215, 180]
+    width: 37,
+    height: 52,
+    offset: [76, 70],
+    scale: 2.5
   }
 
   let frame = {
@@ -22,6 +25,7 @@ export default function ({ game, position, controls }) {
   return new Sprite({
     position,
     game,
+    dimensions: [ image.width * image.scale, image.height * image.scale],
     mixins: [
       [SpriteHealth],
       [SpriteAttack],
@@ -31,19 +35,19 @@ export default function ({ game, position, controls }) {
           {
             img: 'assets/samuraiMack/Idle.png',
             dimensions: [
-              image.width - image.offset[0],
-              image.height - image.offset[1]
+              image.width,
+              image.height
             ],
-            crop: [0, 0, image.width, image.height],
-            scale: 2.5
-            // animation: function ({ crop }) {
-            //   if (!(game.FRAME.ELAPSED % frame.hold)) {
-            //     crop[0] = image.width * frame.current
+            crop: [...image.offset, image.width, image.height],
+            scale: image.scale,
+            animation: function ({ crop }) {
+              if (!(game.FRAME.ELAPSED % frame.hold)) {
+                crop[0] = image.width * frame.current + image.offset[0]
 
-            //     frame.current += 1
-            //     frame.current %= frame.count
-            //   }
-            // }
+                frame.current += 1
+                frame.current %= frame.count
+              }
+            }
           }
         ]
       ],

@@ -7,7 +7,9 @@ class Sprite {
   FIRST_DRAW = true
   CONTROLS = {}
 
-  constructor({ game, position = [0, 0], mixins = [] }) {
+  constructor({ game, position = [0, 0], dimensions = [ ], mixins = [] }) {
+    this.WIDTH = dimensions[0] ? dimensions[0] : this.WIDTH
+    this.HEIGHT = dimensions[1] ? dimensions[1] : this.HEIGHT
     this.game = game
     this.position = position
 
