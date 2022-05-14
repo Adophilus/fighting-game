@@ -2,12 +2,12 @@ import Sprite from '../classes/Sprite.js'
 import SpriteImage from '../mixins/SpriteImage.js'
 
 export default function ({ game }) {
-  let image = {
+  const image = {
     width: 118,
     height: 128
   }
 
-  let frame = {
+  const frame = {
     count: 6,
     current: 1,
     hold: 5
