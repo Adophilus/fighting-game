@@ -1,34 +1,51 @@
 const debug = false
 
-export default function ({ img, dimensions, crop, scale = 1, animation }) {
+export default function ({
+  img,
+  dimensions = [],
+  crop = [],
+  scale = 1,
+  animation
+}) {
+  let params = {
+    image: null,
+    crop,
+    dimensions
+  }
+
+  for (let image in img) {
+    if (image === 'default') {
+      continue
+    }
+
+    let imageSrc = img[image]
+    img[image] = new Image()
+    img[image].src = imageSrc
+  }
+
+  params.image = img[img.default]
+
+  // handle sprite switching
+  this.switchSprite = (image) => {
+    params.image = img[image]
+  }
+
   // handle drawing
   let draw = this.draw
   this.draw = () => {
     draw.apply(this)
 
-    let image = new Image()
-    if (img instanceof Image) {
-      image = img
-    } else {
-      image.src = img
-    }
-
-    let params = [image, ...this.position]
-
     if (animation) {
-      animation.apply(this, [{ params, crop, dimensions }])
+      animation.apply(this, [params])
     }
 
-    if (crop) {
-      params.splice(1, 2)
-      params.push(...crop)
-      params.push(...this.position)
-    }
-    if (dimensions) {
-      params.push(dimensions[0] * scale)
-      params.push(dimensions[1] * scale)
-    }
-
-    this.game.context.drawImage(...params)
+    this.game.context.drawImage(
+      ...[
+        params.image,
+        ...params.crop,
+        ...this.position,
+        ...params.dimensions.map((dimension) => dimension * scale)
+      ]
+    )
   }
 }

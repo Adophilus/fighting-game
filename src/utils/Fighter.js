@@ -11,7 +11,7 @@ export default function ({ game, position, controls }) {
     fullWidth: 1600,
     fullHeight: 200,
     sectionWidth: 200, // fullWidth / frame.count
-    width: 195, // 37,
+    width: 124, // 37,
     height: 70, // 52
     offset: [76, 50], // [76, 70],
     scale: 2.5
@@ -22,18 +22,6 @@ export default function ({ game, position, controls }) {
     current: 1,
     hold: 5
   }
-
-  const runningImage = new Image()
-  runningImage.src = 'assets/samuraiMack/Run.png'
-
-  const jumpingImage = new Image()
-  jumpingImage.src = 'assets/samuraiMack/Jump.png'
-
-  const fallingImage = new Image()
-  fallingImage.src = 'assets/samuraiMack/Fall.png'
-
-  const attackingImage1 = new Image()
-  attackingImage1.src = 'assets/samuraiMack/Attack1.png'
 
   const changed = {
     up: false,
@@ -53,7 +41,14 @@ export default function ({ game, position, controls }) {
         SpriteImage,
         [
           {
-            img: 'assets/samuraiMack/Idle.png',
+            img: {
+              default: 'idle',
+              idle: 'assets/samuraiMack/Idle.png',
+              jumping: 'assets/samuraiMack/Jump.png',
+              falling: 'assets/samuraiMack/Fall.png',
+              running: 'assets/samuraiMack/Run.png',
+              attacking: 'assets/samuraiMack/Attack1.png'
+            },
             dimensions: [image.width, image.height],
             crop: [...image.offset, image.width, image.height],
             scale: image.scale,
@@ -70,7 +65,7 @@ export default function ({ game, position, controls }) {
                     changed.attack = true
                   }
 
-                  params[0] = attackingImage1
+                  this.switchSprite('attacking')
                 } else {
                   if (
                     !((changed.fall || changed.jump) && frame.current !== 0)
@@ -86,7 +81,7 @@ export default function ({ game, position, controls }) {
                         changed.attack = false
                       }
 
-                      params[0] = jumpingImage
+                      this.switchSprite('jumping')
                     } else if (this.AIRBORNE) {
                       if (!changed.fall) {
                         frame.count = 2
@@ -98,7 +93,7 @@ export default function ({ game, position, controls }) {
                         changed.attack = false
                       }
 
-                      params[0] = fallingImage
+                      this.switchSprite('falling')
                     } else if (this.MOVING.left || this.MOVING.right) {
                       if (!changed.side) {
                         frame.count = 8
@@ -110,7 +105,7 @@ export default function ({ game, position, controls }) {
                         changed.attack = false
                       }
 
-                      params[0] = runningImage
+                      this.switchSprite('running')
                     } else {
                       frame.count = 8
                       frame.hold = 5
@@ -118,6 +113,7 @@ export default function ({ game, position, controls }) {
                       changed.side = false
                       changed.fall = false
                       changed.attack = false
+                      this.switchSprite('idle')
                     }
                   }
                 }
@@ -133,7 +129,6 @@ export default function ({ game, position, controls }) {
           }
         ]
       ],
-      // [SpriteColor, [{ fill: 'black', outline: 'yellow' }]],
       [SpriteStats],
       [
         SpriteMovement,

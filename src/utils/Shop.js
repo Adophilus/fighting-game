@@ -21,7 +21,7 @@ export default function ({ game }) {
         SpriteImage,
         [
           {
-            img: 'assets/shop.png',
+            img: { default: 'shop', shop: 'assets/shop.png' },
             dimensions: [image.width, image.height],
             crop: [0, 0, image.width, image.height],
             scale: 2.75,

@@ -7,16 +7,20 @@ export default function ({ fill, outline }) {
     draw.apply(this)
 
     // draw collision border
-    this.game.context.fillStyle = outline
-    this.game.context.fillRect(
-      this.position[0] - 2,
-      this.position[1] - 2,
-      this.WIDTH + 4,
-      this.HEIGHT
-    )
+    if (outline) {
+      this.game.context.fillStyle = outline
+      this.game.context.fillRect(
+        this.position[0] - 2,
+        this.position[1] - 2,
+        this.WIDTH + 4,
+        this.HEIGHT
+      )
+    }
 
     // draw sprite
-    this.game.context.fillStyle = fill
-    this.game.context.fillRect(...this.position, this.WIDTH, this.HEIGHT)
+    if (fill) {
+      this.game.context.fillStyle = fill
+      this.game.context.fillRect(...this.position, this.WIDTH, this.HEIGHT)
+    }
   }
 }

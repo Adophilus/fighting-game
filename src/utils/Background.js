@@ -5,6 +5,8 @@ export default function ({ game }) {
   return new Sprite({
     position: [0, 0],
     game,
-    mixins: [[SpriteImage, [{ img: 'assets/background.png' }]]]
+    mixins: [
+      [SpriteImage, [{ img: { default: 'bg', bg: 'assets/background.png' } }]]
+    ]
   })
 }
