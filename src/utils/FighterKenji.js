@@ -11,7 +11,7 @@ export default function ({ game, position, controls }) {
     fullWidth: 1600,
     fullHeight: 200,
     sectionWidth: 200, // fullWidth / frame.count
-    width: 95,
+    width: 105,
     height: 67,
     offset: [16, 62],
     scale: 2.5
