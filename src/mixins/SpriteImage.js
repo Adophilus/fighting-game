@@ -10,7 +10,8 @@ export default function ({
   let params = {
     image: null,
     crop,
-    dimensions
+    dimensions,
+    position: [ ...this.position ]
   }
 
   for (let image in img) {
@@ -35,6 +36,8 @@ export default function ({
   this.draw = () => {
     draw.apply(this)
 
+    params.position = [ ...this.position ]
+
     if (animation) {
       animation.apply(this, [params])
     }
@@ -43,7 +46,7 @@ export default function ({
       ...[
         params.image,
         ...params.crop,
-        ...this.position,
+        ...params.position,
         ...params.dimensions.map((dimension) => dimension * scale)
       ]
     )

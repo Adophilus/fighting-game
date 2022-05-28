@@ -11,7 +11,7 @@ export default function ({ game, position, controls }) {
     fullWidth: 1600,
     fullHeight: 200,
     sectionWidth: 200, // fullWidth / frame.count
-    width: 124,
+    width: 95,
     height: 67,
     offset: [16, 62],
     scale: 2.5
@@ -52,7 +52,7 @@ export default function ({ game, position, controls }) {
             dimensions: [image.width, image.height],
             crop: [...image.offset, image.width, image.height],
             scale: image.scale,
-            animation: function ({ crop, params }) {
+            animation: function ({ crop, position }) {
               if (!(changed.attack && frame.current !== 0)) {
                 if (this.ATTACKING) {
                   if (!changed.attack) {
@@ -125,6 +125,8 @@ export default function ({ game, position, controls }) {
                 frame.current += 1
                 frame.current %= frame.count
               }
+
+              position[0] -= (63 + image.width)
             }
           }
         ]

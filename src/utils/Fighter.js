@@ -12,7 +12,7 @@ export default function ({ game, position, controls }) {
     fullHeight: 200,
     sectionWidth: 200, // fullWidth / frame.count
     width: 124, // 37,
-    height: 70, // 52
+    height: 70 + 22, // 52
     offset: [76, 50], // [76, 70],
     scale: 2.5
   }
@@ -33,7 +33,7 @@ export default function ({ game, position, controls }) {
   return new Sprite({
     position,
     game,
-    dimensions: [37 * image.scale, image.height * image.scale],
+    dimensions: [37 * image.scale, 70 * image.scale],
     mixins: [
       [SpriteHealth],
       [SpriteAttack],
@@ -52,7 +52,7 @@ export default function ({ game, position, controls }) {
             dimensions: [image.width, image.height],
             crop: [...image.offset, image.width, image.height],
             scale: image.scale,
-            animation: function ({ crop, params }) {
+            animation: function ({ crop }) {
               if (!(changed.attack && frame.current !== 0)) {
                 if (this.ATTACKING) {
                   if (!changed.attack) {
