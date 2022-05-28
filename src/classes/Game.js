@@ -1,5 +1,6 @@
 import Sprite from './Sprite.js'
 import Fighter from '../utils/Fighter.js'
+import FighterKenji from '../utils/FighterKenji.js'
 import Background from '../utils/Background.js'
 import Shop from '../utils/Shop.js'
 
@@ -46,7 +47,7 @@ class Game {
           attack: 'Insert'
         }
       }),
-      new Fighter({
+      new FighterKenji({
         game: this,
         position: [300, 0],
         controls: {
