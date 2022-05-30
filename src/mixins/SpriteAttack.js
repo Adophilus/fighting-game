@@ -25,7 +25,6 @@ export default function () {
   }
 
   this.receiveAttack = (atk) => {
-    this.__showHealthBar()
     this.health.decrease(atk)
     this.trigger('attacked', atk)
   }

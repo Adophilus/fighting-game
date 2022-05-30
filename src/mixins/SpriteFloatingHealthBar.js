@@ -1,15 +1,11 @@
 import HealthBar from '../classes/HealthBar.js'
 
 export default function () {
-  this.healthBar = new HealthBar({ sprite: this, game: this.game })
+  const healthBar = new HealthBar({ sprite: this, game: this.game })
+  let healthBarTimeout = 4
 
-  this.__showHealthBar = () => {
-    this.healthBar.SHOW = true
-    setTimeout(() => {
-      if (this.healthBar.SHOW) {
-        this.healthBar.SHOW = false
-      }
-    }, 4000)
+  let __showHealthBar = () => {
+    healthBarTimeout = 4
   }
 
   // draw healthBar
@@ -17,6 +13,29 @@ export default function () {
   this.draw = () => {
     draw.apply(this)
 
-    this.healthBar.draw()
+    if (
+      this.MOVING.up ||
+      this.MOVING.down ||
+      this.MOVING.left ||
+      this.MOVING.right
+    ) {
+      __showHealthBar()
+    }
+
+    healthBar.draw()
   }
+
+  this.on('attacked', () => {
+    __showHealthBar()
+  })
+
+  setInterval(() => {
+    if (healthBarTimeout > 0) {
+      healthBar.show()
+    } else {
+      healthBar.show(false)
+    }
+
+    healthBarTimeout -= 1
+  }, 500)
 }

@@ -21,14 +21,18 @@ export default function ({ vel, controls }) {
 
       if (event.key === this.CONTROLS.up) {
         this.MOVING.up = true
+        this.trigger('move', { direction: 'up' })
       } else if (event.key === this.CONTROLS.down) {
         this.MOVING.down = true
+        this.trigger('move', { direction: 'down' })
       }
 
       if (event.key === this.CONTROLS.left) {
         this.MOVING.left = true
+        this.trigger('move', { direction: 'left' })
       } else if (event.key === this.CONTROLS.right) {
         this.MOVING.right = true
+        this.trigger('move', { direction: 'right' })
       }
     })
 
@@ -68,10 +72,6 @@ export default function ({ vel, controls }) {
       this.JUMPING = 0
     }
 
-    if (this.MOVING.up) {
-      this.__showHealthBar()
-    }
-
     if (this.MOVING.up || force) {
       if (!this.AIRBORNE) {
         this.JUMPING = 300
@@ -81,10 +81,6 @@ export default function ({ vel, controls }) {
   }
 
   this.moveDown = ({ force, vel, debug }) => {
-    if (this.MOVING.down) {
-      this.__showHealthBar()
-    }
-
     if (this.MOVING.down || force) {
       let newPos = this.position[1] + (vel || this.VEL)
       let canGo = this.game.canGo({
@@ -105,10 +101,6 @@ export default function ({ vel, controls }) {
   }
 
   this.moveLeft = ({ force, vel, debug }) => {
-    if (this.MOVING.left) {
-      this.__showHealthBar()
-    }
-
     if (this.MOVING.left || force) {
       let newPos = this.position[0] - (vel || this.VEL)
       if (
@@ -125,10 +117,6 @@ export default function ({ vel, controls }) {
   }
 
   this.moveRight = ({ force, vel, debug }) => {
-    if (this.MOVING.right) {
-      this.__showHealthBar()
-    }
-
     if (this.MOVING.right || force) {
       let newPos = this.position[0] + (vel || this.VEL)
       if (

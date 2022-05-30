@@ -15,6 +15,10 @@ class HealthBar {
     ]
   }
 
+  show(display = true) {
+    this.SHOW = display
+  }
+
   draw() {
     if (this.SHOW) {
       this.position = this.__setPosition()
