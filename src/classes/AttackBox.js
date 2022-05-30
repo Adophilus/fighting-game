@@ -3,9 +3,13 @@ class AttackBox {
   HEIGHT = 20
   WIDTH = 30
 
-  constructor({ game, sprite }) {
+  constructor({ game, sprite, width, height, fill }) {
     this.game = game
     this.sprite = sprite
+    this.fill = fill
+
+    this.WIDTH = width
+    this.HEIGHT = height
 
     this.position = this.__setPosition()
     this.__assignId()
@@ -33,8 +37,10 @@ class AttackBox {
   draw() {
     this.position = this.__setPosition()
 
-    this.game.context.fillStyle = 'blue'
-    this.game.context.fillRect(...this.position, this.WIDTH, this.HEIGHT)
+    if (this.fill) {
+      this.game.context.fillStyle = 'blue'
+      this.game.context.fillRect(...this.position, this.WIDTH, this.HEIGHT)
+    }
   }
 }
 

@@ -1,5 +1,3 @@
-import AttackBox from '../classes/AttackBox.js'
-
 const debug = false
 
 export default function () {
@@ -8,7 +6,7 @@ export default function () {
     let { force } = params
     if (this.ATTACKING || force) {
       this.game.initiateAttack({ initiator: this, atk: this.STATS.ATK })
-      this.attackBox.draw()
+      this.trigger('attack')
     }
   }
 
@@ -27,8 +25,8 @@ export default function () {
   }
 
   this.receiveAttack = (atk) => {
-    this.__showHealthBar()
     this.health.decrease(atk)
+    this.trigger('attacked', atk)
   }
 
   // handle movement
@@ -40,6 +38,5 @@ export default function () {
     this.attack({ debug })
   }
 
-  this.attackBox = new AttackBox({ sprite: this, game: this.game })
   __hookKeys()
 }
