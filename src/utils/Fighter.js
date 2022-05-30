@@ -1,6 +1,8 @@
 import Sprite from '../classes/Sprite.js'
 import SpriteAttack from '../mixins/SpriteAttack.js'
+import SpriteAttackBox from '../mixins/SpriteAttackBox.js'
 import SpriteColor from '../mixins/SpriteColor.js'
+import SpriteFloatingHealthBar from '../mixins/SpriteFloatingHealthBar.js'
 import SpriteHealth from '../mixins/SpriteHealth.js'
 import SpriteImage from '../mixins/SpriteImage.js'
 import SpriteMovement from '../mixins/SpriteMovement.js'
@@ -12,7 +14,7 @@ export default function ({ game, position, controls }) {
     fullHeight: 200,
     sectionWidth: 200, // fullWidth / frame.count
     width: 124, // 37,
-    height: 70 + 22, // 52
+    height: 72,
     offset: [76, 50], // [76, 70],
     scale: 2.5
   }
@@ -33,10 +35,15 @@ export default function ({ game, position, controls }) {
   return new Sprite({
     position,
     game,
-    dimensions: [37 * image.scale, 70 * image.scale],
+    dimensions: [37 * image.scale, (image.height - 20) * image.scale],
     mixins: [
       [SpriteHealth],
+      [SpriteFloatingHealthBar],
       [SpriteAttack],
+      [
+        SpriteAttackBox,
+        [{ width: 56 * image.scale, height: 59 * image.scale }]
+      ],
       [
         SpriteImage,
         [
@@ -52,7 +59,7 @@ export default function ({ game, position, controls }) {
             dimensions: [image.width, image.height],
             crop: [...image.offset, image.width, image.height],
             scale: image.scale,
-            animation: function ({ crop }) {
+            animation: function ({ crop, position }) {
               if (!(changed.attack && frame.current !== 0)) {
                 if (this.ATTACKING) {
                   if (!changed.attack) {
@@ -125,6 +132,8 @@ export default function ({ game, position, controls }) {
                 frame.current += 1
                 frame.current %= frame.count
               }
+
+              position[1] -= 50
             }
           }
         ]
