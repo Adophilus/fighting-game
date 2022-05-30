@@ -126,7 +126,7 @@ export default function ({ game, position, controls }) {
                 frame.current %= frame.count
               }
 
-              position[0] -= (63 + image.width)
+              position[0] -= 63 + image.width
             }
           }
         ]
