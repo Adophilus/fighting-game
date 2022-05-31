@@ -13,9 +13,9 @@ export default function ({ game, position, controls }) {
     fullWidth: 1600,
     fullHeight: 200,
     sectionWidth: 200, // fullWidth / frame.count
-    width: 105,
-    height: 67,
-    offset: [16, 62],
+    width: 124, // 37,
+    height: 72,
+    offset: [76, 50], // [76, 70],
     scale: 2.5
   }
 
@@ -31,7 +31,6 @@ export default function ({ game, position, controls }) {
     fall: false,
     attack: false,
     attacked: false,
-    death: false,
     setAll(val) {
       for (let key of Object.keys(changed)) {
         if (key === 'setAll') {
@@ -44,20 +43,20 @@ export default function ({ game, position, controls }) {
 
   let attacked = false
   let attacking = 0
-  let attackingFrame = 3 // attackingFrame - 1
+  let attackingFrame = 4 // attackingFrame - 1
   let initializeAttack = null
 
   return new Sprite({
     position,
     game,
-    dimensions: [37 * image.scale, image.height * image.scale],
+    dimensions: [37 * image.scale, (image.height - 20) * image.scale],
     mixins: [
       [SpriteHealth],
       [SpriteFloatingHealthBar],
       [SpriteAttack],
       [
         SpriteAttackBox,
-        [{ width: (56 + 8) * image.scale, height: 59 * image.scale }]
+        [{ width: (56 + 5) * image.scale, height: 59 * image.scale }]
       ],
       [
         SpriteImage,
@@ -65,13 +64,13 @@ export default function ({ game, position, controls }) {
           {
             img: {
               default: 'idle',
-              idle: 'assets/kenji/Idle.png',
-              jumping: 'assets/kenji/Jump.png',
-              falling: 'assets/kenji/Fall.png',
-              running: 'assets/kenji/Run.png',
-              attacking: 'assets/kenji/Attack1.png',
-              attacked: 'assets/kenji/Take hit.png',
-              death: 'assets/kenji/Death.png'
+              idle: 'assets/samuraiMack/Idle.png',
+              jumping: 'assets/samuraiMack/Jump.png',
+              falling: 'assets/samuraiMack/Fall.png',
+              running: 'assets/samuraiMack/Run.png',
+              attacking: 'assets/samuraiMack/Attack1.png',
+              attacked: 'assets/samuraiMack/Take Hit - white silhouette.png',
+              death: 'assets/samuraiMack/Death.png'
             },
             dimensions: [image.width, image.height],
             crop: [...image.offset, image.width, image.height],
@@ -79,7 +78,7 @@ export default function ({ game, position, controls }) {
             animation: function ({ crop, position }) {
               if (this.DEAD) {
                 if (!changed.death) {
-                  frame.count = 7
+                  frame.count = 6
                   frame.hold = 5
                   frame.current = 0
 
@@ -96,7 +95,7 @@ export default function ({ game, position, controls }) {
                 ) {
                   if (attacking) {
                     if (!changed.attack) {
-                      frame.count = 4
+                      frame.count = 6
                       frame.hold = 5
                       frame.current = 0
 
@@ -105,11 +104,10 @@ export default function ({ game, position, controls }) {
                     }
 
                     attacking -= 1
-
                     this.switchSprite('attacking')
                   } else if (attacked) {
                     if (!changed.attacked) {
-                      frame.count = 3
+                      frame.count = 4
                       frame.hold = 5
                       frame.current = 0
 
@@ -156,7 +154,7 @@ export default function ({ game, position, controls }) {
 
                         this.switchSprite('running')
                       } else {
-                        frame.count = 4
+                        frame.count = 8
                         frame.hold = 5
 
                         changed.setAll(false)
@@ -185,12 +183,12 @@ export default function ({ game, position, controls }) {
                 frame.current %= frame.count
               }
 
-              position[0] -= 63 + image.width
+              position[1] -= 50
             }
           }
         ]
       ],
-      [SpriteStats, [{ atk: 5 }]],
+      [SpriteStats, [{ atk: 6 }]],
       [
         SpriteMovement,
         [
@@ -203,7 +201,7 @@ export default function ({ game, position, controls }) {
   })
     .on('attack', (initAttack) => {
       initializeAttack = initAttack
-      if (!attacking) attacking = 3
+      if (!attacking) attacking = 5
     })
     .on('attacked', () => {
       if (!attacked) attacked = true

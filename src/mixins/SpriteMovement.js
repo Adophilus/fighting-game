@@ -19,6 +19,10 @@ export default function ({ vel, controls }) {
     window.addEventListener('keydown', (event) => {
       // console.log(event.key);
 
+      if (this.DEAD) {
+        return
+      }
+
       if (event.key === this.CONTROLS.up) {
         this.MOVING.up = true
         this.trigger('move', { direction: 'up' })

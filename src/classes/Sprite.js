@@ -5,6 +5,7 @@ class Sprite {
   WIDTH = 25
   HEIGHT = 50
   CONTROLS = {}
+  DEAD = false
 
   constructor({ game, position = [0, 0], dimensions = [], mixins = [] }) {
     this.WIDTH = dimensions[0] ? dimensions[0] : this.WIDTH
@@ -33,6 +34,7 @@ class Sprite {
     if (!this._eventHandlers) this._eventHandlers = {}
     if (!this._eventHandlers[eventName]) this._eventHandlers[eventName] = []
     this._eventHandlers[eventName].push(handler)
+    return this
   }
 
   off(eventName, handler) {

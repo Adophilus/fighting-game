@@ -1,41 +1,36 @@
 const debug = false
 
-export default function () {
-  // handle attack
-  this.attack = (params = {}) => {
-    let { force } = params
-    if (this.ATTACKING || force) {
-      this.game.initiateAttack({ initiator: this, atk: this.STATS.ATK })
-      this.trigger('attack')
-    }
-  }
-
+export default function (callback) {
   let __hookKeys = () => {
     window.addEventListener('keydown', (event) => {
       if (event.key === this.CONTROLS.attack) {
-        this.ATTACKING = true
+        // this.ATTACKING = true
+        this.trigger('attack', () =>
+          this.game.initiateAttack({ initiator: this, atk: this.STATS.ATK })
+        )
       }
     })
 
-    window.addEventListener('keyup', (event) => {
-      if (event.key === this.CONTROLS.attack) {
-        this.ATTACKING = false
-      }
-    })
+    // window.addEventListener('keyup', (event) => {
+    //   if (event.key === this.CONTROLS.attack) {
+    //     // this.ATTACKING = false
+    //     // this.trigger("attack-end")
+    //   }
+    // })
   }
 
   this.receiveAttack = (atk) => {
-    this.health.decrease(atk)
+    if (this.DEAD) {
+      return
+    }
+
     this.trigger('attacked', atk)
-  }
+    this.health.decrease(atk)
 
-  // handle movement
-  let draw = this.draw
-  this.draw = () => {
-    draw.apply(this)
-
-    // handle attack
-    this.attack({ debug })
+    if (this.HEALTH <= 0) {
+      this.DEAD = true
+      this.trigger('death')
+    }
   }
 
   __hookKeys()

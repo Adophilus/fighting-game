@@ -1,5 +1,6 @@
-export default function () {
+export default function (params = { atk: 1 }) {
+  let { atk } = params
   this.STATS = {
-    ATK: 1
+    ATK: atk
   }
 }

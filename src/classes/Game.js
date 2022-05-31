@@ -1,5 +1,5 @@
 import Sprite from './Sprite.js'
-import Fighter from '../utils/Fighter.js'
+import FighterSamurai from '../utils/FighterSamurai.js'
 import FighterKenji from '../utils/FighterKenji.js'
 import Background from '../utils/Background.js'
 import Shop from '../utils/Shop.js'
@@ -36,7 +36,7 @@ class Game {
     this.NPCS = [new Background({ game: this }), new Shop({ game: this })]
 
     this.PLAYERS = [
-      new Fighter({
+      new FighterSamurai({
         game: this,
         position: [100, 0],
         controls: {
@@ -173,7 +173,7 @@ class Game {
     })
 
     this.OBJECTS.forEach((o, i) => {
-      if (!o.HEALTH) {
+      if (o.HEALTH <= 0) {
         this.OBJECTS.splice(i, 1)
         return
       }
@@ -185,7 +185,7 @@ class Game {
     })
 
     this.ENEMIES.forEach((o, i) => {
-      if (!o.HEALTH) {
+      if (o.HEALTH <= 0) {
         this.ENEMIES.splice(i, 1)
         return
       }
@@ -197,10 +197,10 @@ class Game {
     })
 
     this.PLAYERS.forEach((o, i) => {
-      if (!o.HEALTH) {
-        this.PLAYERS.splice(i, 1)
-        return
-      }
+      // if (o.HEALTH <= 0) {
+      //   this.PLAYERS.splice(i, 1)
+      //   return
+      // }
 
       // handle gravity
       o.moveDown({ force: true, vel: this.GRAVITY })
