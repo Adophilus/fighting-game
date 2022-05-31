@@ -42,7 +42,7 @@ export default function ({ game, position, controls }) {
       [SpriteAttack],
       [
         SpriteAttackBox,
-        [{ width: 56 * image.scale, height: 59 * image.scale }]
+        [{ width: (56 + 5) * image.scale, height: 59 * image.scale }]
       ],
       [
         SpriteImage,
