@@ -2,7 +2,7 @@ import Sprite from '../classes/Sprite.js'
 import SpriteAttack from '../mixins/SpriteAttack.js'
 import SpriteAttackBox from '../mixins/SpriteAttackBox.js'
 import SpriteColor from '../mixins/SpriteColor.js'
-import SpriteFloatingHealthBar from '../mixins/SpriteFloatingHealthBar.js'
+import SpriteGameHealthBar from '../mixins/SpriteGameHealthBar.js'
 import SpriteHealth from '../mixins/SpriteHealth.js'
 import SpriteImage from '../mixins/SpriteImage.js'
 import SpriteMovement from '../mixins/SpriteMovement.js'
@@ -53,7 +53,16 @@ export default function ({ game, position, controls }) {
     dimensions: [37 * image.scale, image.height * image.scale],
     mixins: [
       [SpriteHealth],
-      [SpriteFloatingHealthBar],
+      [
+        SpriteGameHealthBar,
+        [
+          {
+            container: document.querySelector(
+              '#gameContainer .health-container .player-health:nth-of-type(1)'
+            )
+          }
+        ]
+      ],
       [SpriteAttack],
       [
         SpriteAttackBox,
