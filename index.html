@@ -3,6 +3,19 @@
   <head>
     <link rel="stylesheet" href="./src/styles/style.css" />
     <title>Fighting Game</title>
+    <script>
+      let loadGame = false
+      let regexp = /android|iphone|kindle|ipad/i
+      let isMobileDevice = regexp.test(navigator.userAgent)
+
+      if (isMobileDevice) {
+        alert(
+          'To experience the best game play please access this game URL using a larger screen (alongside a physical keyboard)'
+        )
+      } else {
+        loadGame = true
+      }
+    </script>
   </head>
   <body>
     <div id="gameContainer">
@@ -27,7 +40,11 @@
       import GameTimer from './src/mixins/GameTimer.js'
       import GameText from './src/mixins/GameText.js'
 
-      document.querySelector('body').onload = () => {
+      window.addEventListener('DOMContentLoaded', (event) => {
+        if (!loadGame) {
+          return
+        }
+
         const game = new Game({
           mixins: [
             [
@@ -53,9 +70,7 @@
         })
         game.init()
         game.start()
-      }
 
-      window.addEventListener('DOMContentLoaded', (event) => {
         setTimeout(
           () =>
             (document.querySelector(
