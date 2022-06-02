@@ -81,7 +81,7 @@ export default function ({ game, position, controls }) {
               falling: 'assets/samuraiMack/Fall.png',
               running: 'assets/samuraiMack/Run.png',
               attacking: 'assets/samuraiMack/Attack1.png',
-              attacked: 'assets/samuraiMack/Take Hit - white silhouette.png',
+              attacked: 'assets/samuraiMack/Take Hit.png',
               death: 'assets/samuraiMack/Death.png',
 
               idleFlip: 'assets/samuraiMack/flip/Idle.png',
@@ -90,7 +90,7 @@ export default function ({ game, position, controls }) {
               runningFlip: 'assets/samuraiMack/flip/Run.png',
               attackingFlip: 'assets/samuraiMack/flip/Attack1.png',
               attackedFlip:
-                'assets/samuraiMack/flip/Take Hit - white silhouette.png',
+                'assets/samuraiMack/flip/Take Hit.png',
               deathFlip: 'assets/samuraiMack/flip/Death.png'
             },
             dimensions: [image.width, image.height],

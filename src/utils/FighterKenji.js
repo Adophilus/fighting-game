@@ -61,7 +61,6 @@ export default function ({ game, position, controls }) {
     dimensions: [sprite.width * image.scale, sprite.height * image.scale],
     mixins: [
       [SpriteHealth],
-      [SpriteColor, [{ outline: 'yellow', width: image.width * image.scale }]],
       [
         SpriteGameHealthBar,
         [

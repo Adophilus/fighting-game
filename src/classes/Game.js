@@ -42,26 +42,28 @@ class Game {
     this.NPCS = [new Background({ game: this }), new Shop({ game: this })]
 
     this.PLAYERS = [
-      new FighterSamurai({
+    // player 1
+    new FighterKenji({
         game: this,
         position: [100, 0],
-        controls: {
-          up: 'ArrowUp',
-          down: 'ArrowDown',
-          left: 'ArrowLeft',
-          right: 'ArrowRight',
-          attack: 'Insert'
-        }
-      }),
-      new FighterKenji({
-        game: this,
-        position: [400, 0],
         controls: {
           up: 'w',
           down: 's',
           left: 'a',
           right: 'd',
           attack: 'f'
+        }
+      }),
+    // player 2
+      new FighterSamurai({
+        game: this,
+        position: [this.WIDTH - 200, 0],
+        controls: {
+          up: 'ArrowUp',
+          down: 'ArrowDown',
+          left: 'ArrowLeft',
+          right: 'ArrowRight',
+          attack: 'Insert'
         }
       })
     ]
