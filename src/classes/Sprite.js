@@ -6,6 +6,8 @@ class Sprite {
   HEIGHT = 50
   CONTROLS = {}
   DEAD = false
+  END = false
+  FACING = 1
 
   constructor({ game, position = [0, 0], dimensions = [], mixins = [] }) {
     this.WIDTH = dimensions[0] ? dimensions[0] : this.WIDTH
@@ -15,9 +17,9 @@ class Sprite {
 
     this.__assignId()
 
-    for (let mixin of mixins) {
-      mixin[0].apply(this, mixin[1])
-    }
+    mixins.forEach((mixin) => mixin[0].apply(this, mixin[1]))
+
+    this.game.on('end', () => this.end())
   }
 
   __assignId() {
@@ -26,6 +28,10 @@ class Sprite {
 
   equals(obj) {
     return this.id === obj.id
+  }
+
+  isDead() {
+    return this.DEAD
   }
 
   draw() {}
@@ -49,6 +55,10 @@ class Sprite {
     this._eventHandlers[eventName].forEach((handler) =>
       handler.apply(this, args)
     )
+  }
+
+  end() {
+    this.END = true
   }
 }
 

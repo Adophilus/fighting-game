@@ -1,6 +1,9 @@
 const debug = false
 
-export default function ({ fill, outline }) {
+export default function ({ fill, outline, width, height }) {
+  width = width || this.WIDTH
+  height = height || this.HEIGHT
+
   // handle drawing
   let draw = this.draw
   this.draw = () => {
@@ -12,15 +15,15 @@ export default function ({ fill, outline }) {
       this.game.context.fillRect(
         this.position[0] - 2,
         this.position[1] - 2,
-        this.WIDTH + 4,
-        this.HEIGHT
+        width + 4,
+        height
       )
     }
 
     // draw sprite
     if (fill) {
       this.game.context.fillStyle = fill
-      this.game.context.fillRect(...this.position, this.WIDTH, this.HEIGHT)
+      this.game.context.fillRect(...this.position, width, height)
     }
   }
 }

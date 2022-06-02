@@ -38,7 +38,7 @@ class AttackBox {
     this.position = this.__setPosition()
 
     if (this.fill) {
-      this.game.context.fillStyle = 'blue'
+      this.game.context.fillStyle = this.fill
       this.game.context.fillRect(...this.position, this.WIDTH, this.HEIGHT)
     }
   }

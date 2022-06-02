@@ -5,14 +5,52 @@
     <title>Fighting Game</title>
   </head>
   <body>
-    <div class="game">
+    <div id="gameContainer">
+      <div class="health-container">
+        <div class="player-health">
+          <div class="health"></div>
+          <div class="health-anim"></div>
+        </div>
+        <div class="timer">
+          <span class="timer-text"> 60 </span>
+        </div>
+        <div class="player-health">
+          <div class="health"></div>
+          <div class="health-anim"></div>
+        </div>
+      </div>
+      <div id="gameText"></div>
       <canvas id="game"></canvas>
     </div>
     <script type="module">
       import Game from './src/classes/Game.js'
+      import GameTimer from './src/mixins/GameTimer.js'
+      import GameText from './src/mixins/GameText.js'
 
       document.querySelector('body').onload = () => {
-        const game = new Game()
+        const game = new Game({
+          mixins: [
+            [
+              GameTimer,
+              [
+                {
+                  time: 600,
+                  element: document.querySelector(
+                    '#gameContainer .health-container .timer .timer-text'
+                  )
+                }
+              ]
+            ],
+            [
+              GameText,
+              [
+                {
+                  element: document.querySelector('#gameContainer #gameText')
+                }
+              ]
+            ]
+          ]
+        })
         game.init()
         game.start()
       }

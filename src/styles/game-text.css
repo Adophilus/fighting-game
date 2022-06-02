@@ -1,0 +1,14 @@
+#gameContainer #gameText {
+  position: absolute;
+  color: white;
+  font-weight: 900;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-shadow: 3px 3px black, -3px -3px black, 4px 3px 10px black;
+  font-family: press start;
+  font-size: 3rem;
+  user-select: none;
+}

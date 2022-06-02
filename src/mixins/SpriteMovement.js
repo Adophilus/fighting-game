@@ -4,7 +4,6 @@ const debug = false
 
 export default function ({ vel, controls }) {
   this.VEL = 7
-  this.FACING = 1
   this.MOVING = {
     up: false,
     down: false,
@@ -19,7 +18,7 @@ export default function ({ vel, controls }) {
     window.addEventListener('keydown', (event) => {
       // console.log(event.key);
 
-      if (this.DEAD) {
+      if (this.DEAD || this.END) {
         return
       }
 
@@ -116,7 +115,7 @@ export default function ({ vel, controls }) {
       ) {
         this.position[0] -= vel || this.VEL
       }
-      this.FACING = -1
+      // this.FACING = -1
     }
   }
 
@@ -132,7 +131,7 @@ export default function ({ vel, controls }) {
       ) {
         this.position[0] += vel || this.VEL
       }
-      this.FACING = 1
+      // this.FACING = 1
     }
   }
 

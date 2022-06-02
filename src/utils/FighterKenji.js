@@ -2,6 +2,7 @@ import Sprite from '../classes/Sprite.js'
 import SpriteAttack from '../mixins/SpriteAttack.js'
 import SpriteAttackBox from '../mixins/SpriteAttackBox.js'
 import SpriteColor from '../mixins/SpriteColor.js'
+import SpriteDirection from '../mixins/SpriteDirection.js'
 import SpriteGameHealthBar from '../mixins/SpriteGameHealthBar.js'
 import SpriteHealth from '../mixins/SpriteHealth.js'
 import SpriteImage from '../mixins/SpriteImage.js'
@@ -13,9 +14,10 @@ export default function ({ game, position, controls }) {
     fullWidth: 1600,
     fullHeight: 200,
     sectionWidth: 200, // fullWidth / frame.count
-    width: 105,
+    sectionHeight: 200,
+    width: 115,
     height: 67,
-    offset: [16, 62],
+    offset: [70, 62],
     scale: 2.5
   }
 
@@ -32,6 +34,7 @@ export default function ({ game, position, controls }) {
     attack: false,
     attacked: false,
     death: false,
+    idle: false,
     setAll(val) {
       for (let key of Object.keys(changed)) {
         if (key === 'setAll') {
@@ -42,6 +45,11 @@ export default function ({ game, position, controls }) {
     }
   }
 
+  const sprite = {
+    width: 22,
+    height: image.height - 10
+  }
+
   let attacked = false
   let attacking = 0
   let attackingFrame = 3 // attackingFrame - 1
@@ -50,9 +58,10 @@ export default function ({ game, position, controls }) {
   return new Sprite({
     position,
     game,
-    dimensions: [37 * image.scale, image.height * image.scale],
+    dimensions: [sprite.width * image.scale, sprite.height * image.scale],
     mixins: [
       [SpriteHealth],
+      [SpriteColor, [{ outline: 'yellow', width: image.width * image.scale }]],
       [
         SpriteGameHealthBar,
         [
@@ -66,8 +75,14 @@ export default function ({ game, position, controls }) {
       [SpriteAttack],
       [
         SpriteAttackBox,
-        [{ width: (56 + 8) * image.scale, height: 59 * image.scale }]
+        [
+          {
+            width: 70 * image.scale,
+            height: sprite.height * image.scale
+          }
+        ]
       ],
+      [SpriteDirection],
       [
         SpriteImage,
         [
@@ -80,7 +95,15 @@ export default function ({ game, position, controls }) {
               running: 'assets/kenji/Run.png',
               attacking: 'assets/kenji/Attack1.png',
               attacked: 'assets/kenji/Take hit.png',
-              death: 'assets/kenji/Death.png'
+              death: 'assets/kenji/Death.png',
+
+              idleFlip: 'assets/kenji/flip/Idle.png',
+              jumpingFlip: 'assets/kenji/flip/Jump.png',
+              fallingFlip: 'assets/kenji/flip/Fall.png',
+              runningFlip: 'assets/kenji/flip/Run.png',
+              attackingFlip: 'assets/kenji/flip/Attack1.png',
+              attackedFlip: 'assets/kenji/flip/Take hit.png',
+              deathFlip: 'assets/kenji/flip/Death.png'
             },
             dimensions: [image.width, image.height],
             crop: [...image.offset, image.width, image.height],
@@ -98,6 +121,7 @@ export default function ({ game, position, controls }) {
 
                 if (changed.death && frame.current === 0) {
                   frame.current = frame.count - 1
+                  crop[2] = 150
                 }
               } else {
                 if (
@@ -115,7 +139,11 @@ export default function ({ game, position, controls }) {
 
                     attacking -= 1
 
-                    this.switchSprite('attacking')
+                    if (this.FACING === 1) {
+                      this.switchSprite('attacking')
+                    } else {
+                      this.switchSprite('attackingFlip')
+                    }
                   } else if (attacked) {
                     if (!changed.attacked) {
                       frame.count = 3
@@ -126,7 +154,11 @@ export default function ({ game, position, controls }) {
                       changed.attacked = true
                     }
 
-                    this.switchSprite('attacked')
+                    if (this.FACING === 1) {
+                      this.switchSprite('attacked')
+                    } else {
+                      this.switchSprite('attackedFlip')
+                    }
                   } else {
                     if (
                       !((changed.fall || changed.jump) && frame.current !== 0)
@@ -141,7 +173,11 @@ export default function ({ game, position, controls }) {
                           changed.up = true
                         }
 
-                        this.switchSprite('jumping')
+                        if (this.FACING === 1) {
+                          this.switchSprite('jumping')
+                        } else {
+                          this.switchSprite('jumpingFlip')
+                        }
                       } else if (this.AIRBORNE) {
                         if (!changed.fall) {
                           frame.count = 2
@@ -152,7 +188,11 @@ export default function ({ game, position, controls }) {
                           changed.fall = true
                         }
 
-                        this.switchSprite('falling')
+                        if (this.FACING === 1) {
+                          this.switchSprite('falling')
+                        } else {
+                          this.switchSprite('fallingFlip')
+                        }
                       } else if (this.MOVING.left || this.MOVING.right) {
                         if (!changed.side) {
                           frame.count = 8
@@ -163,14 +203,26 @@ export default function ({ game, position, controls }) {
                           changed.side = true
                         }
 
-                        this.switchSprite('running')
+                        if (this.FACING === 1) {
+                          this.switchSprite('running')
+                        } else {
+                          this.switchSprite('runningFlip')
+                        }
                       } else {
-                        frame.count = 4
-                        frame.hold = 5
+                        if (!changed.idle) {
+                          frame.count = 4
+                          frame.hold = 5
+                          frame.current = 0
 
-                        changed.setAll(false)
+                          changed.setAll(false)
+                          changed.idle = true
+                        }
 
-                        this.switchSprite('idle')
+                        if (this.FACING === 1) {
+                          this.switchSprite('idle')
+                        } else {
+                          this.switchSprite('idleFlip')
+                        }
                       }
                     }
                   }
@@ -187,14 +239,22 @@ export default function ({ game, position, controls }) {
                 }
               }
 
+              position[1] -= 20
+
+              if (this.FACING === 1) {
+                image.offset[0] = 70
+                position[0] -= 40
+              } else {
+                image.offset[0] = 10
+                position[0] -= 200
+              }
+
               if (!(game.FRAME.ELAPSED % frame.hold)) {
                 crop[0] = image.sectionWidth * frame.current + image.offset[0]
 
                 frame.current += 1
                 frame.current %= frame.count
               }
-
-              position[0] -= 63 + image.width
             }
           }
         ]

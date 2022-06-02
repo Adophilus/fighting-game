@@ -2,6 +2,7 @@ import Sprite from '../classes/Sprite.js'
 import SpriteAttack from '../mixins/SpriteAttack.js'
 import SpriteAttackBox from '../mixins/SpriteAttackBox.js'
 import SpriteColor from '../mixins/SpriteColor.js'
+import SpriteDirection from '../mixins/SpriteDirection.js'
 import SpriteGameHealthBar from '../mixins/SpriteGameHealthBar.js'
 import SpriteHealth from '../mixins/SpriteHealth.js'
 import SpriteImage from '../mixins/SpriteImage.js'
@@ -31,6 +32,7 @@ export default function ({ game, position, controls }) {
     fall: false,
     attack: false,
     attacked: false,
+    idle: false,
     setAll(val) {
       for (let key of Object.keys(changed)) {
         if (key === 'setAll') {
@@ -67,6 +69,7 @@ export default function ({ game, position, controls }) {
         SpriteAttackBox,
         [{ width: (56 + 5) * image.scale, height: 59 * image.scale }]
       ],
+      [SpriteDirection],
       [
         SpriteImage,
         [
@@ -79,7 +82,16 @@ export default function ({ game, position, controls }) {
               running: 'assets/samuraiMack/Run.png',
               attacking: 'assets/samuraiMack/Attack1.png',
               attacked: 'assets/samuraiMack/Take Hit - white silhouette.png',
-              death: 'assets/samuraiMack/Death.png'
+              death: 'assets/samuraiMack/Death.png',
+
+              idleFlip: 'assets/samuraiMack/flip/Idle.png',
+              jumpingFlip: 'assets/samuraiMack/flip/Jump.png',
+              fallingFlip: 'assets/samuraiMack/flip/Fall.png',
+              runningFlip: 'assets/samuraiMack/flip/Run.png',
+              attackingFlip: 'assets/samuraiMack/flip/Attack1.png',
+              attackedFlip:
+                'assets/samuraiMack/flip/Take Hit - white silhouette.png',
+              deathFlip: 'assets/samuraiMack/flip/Death.png'
             },
             dimensions: [image.width, image.height],
             crop: [...image.offset, image.width, image.height],
@@ -113,7 +125,11 @@ export default function ({ game, position, controls }) {
                     }
 
                     attacking -= 1
-                    this.switchSprite('attacking')
+                    if (this.FACING === 1) {
+                      this.switchSprite('attacking')
+                    } else {
+                      this.switchSprite('attackingFlip')
+                    }
                   } else if (attacked) {
                     if (!changed.attacked) {
                       frame.count = 4
@@ -124,7 +140,11 @@ export default function ({ game, position, controls }) {
                       changed.attacked = true
                     }
 
-                    this.switchSprite('attacked')
+                    if (this.FACING === 1) {
+                      this.switchSprite('attacked')
+                    } else {
+                      this.switchSprite('attackedFlip')
+                    }
                   } else {
                     if (
                       !((changed.fall || changed.jump) && frame.current !== 0)
@@ -139,7 +159,11 @@ export default function ({ game, position, controls }) {
                           changed.up = true
                         }
 
-                        this.switchSprite('jumping')
+                        if (this.FACING === 1) {
+                          this.switchSprite('jumping')
+                        } else {
+                          this.switchSprite('jumpingFlip')
+                        }
                       } else if (this.AIRBORNE) {
                         if (!changed.fall) {
                           frame.count = 2
@@ -150,7 +174,11 @@ export default function ({ game, position, controls }) {
                           changed.fall = true
                         }
 
-                        this.switchSprite('falling')
+                        if (this.FACING === 1) {
+                          this.switchSprite('falling')
+                        } else {
+                          this.switchSprite('fallingFlip')
+                        }
                       } else if (this.MOVING.left || this.MOVING.right) {
                         if (!changed.side) {
                           frame.count = 8
@@ -161,14 +189,26 @@ export default function ({ game, position, controls }) {
                           changed.side = true
                         }
 
-                        this.switchSprite('running')
+                        if (this.FACING === 1) {
+                          this.switchSprite('running')
+                        } else {
+                          this.switchSprite('runningFlip')
+                        }
                       } else {
-                        frame.count = 8
-                        frame.hold = 5
+                        if (!changed.idle) {
+                          frame.count = 8
+                          frame.hold = 5
+                          frame.current = 0
 
                         changed.setAll(false)
+                        changed.idle = true
+                        }
 
-                        this.switchSprite('idle')
+                        if (this.FACING === 1) {
+                          this.switchSprite('idle')
+                        } else {
+                          this.switchSprite('idleFlip')
+                        }
                       }
                     }
                   }
@@ -183,6 +223,13 @@ export default function ({ game, position, controls }) {
                     attacked = false
                   }
                 }
+              }
+
+              if (this.FACING === 1) {
+                image.offset[0] = 76
+              } else {
+                image.offset[0] = 10
+                position[0] -= image.width + 65
               }
 
               if (!(game.FRAME.ELAPSED % frame.hold)) {
@@ -216,6 +263,10 @@ export default function ({ game, position, controls }) {
       if (!attacked) attacked = true
     })
     .on('death', function () {
-      this.switchSprite('death')
+      if (this.FACING === 1) {
+        this.switchSprite('death')
+      } else {
+        this.switchSprite('deathFlip')
+      }
     })
 }

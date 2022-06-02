@@ -5,8 +5,15 @@ export default function (callback) {
     window.addEventListener('keydown', (event) => {
       if (event.key === this.CONTROLS.attack) {
         // this.ATTACKING = true
-        this.trigger('attack', () =>
-          this.game.initiateAttack({ initiator: this, atk: this.STATS.ATK })
+        if (this.DEAD || this.END) {
+          return
+        }
+
+        this.trigger(
+          'attack',
+          () =>
+            this.game.initiateAttack({ initiator: this, atk: this.STATS.ATK })
+          // this.game.initiateAttack({ initiator: this, atk: 0 })
         )
       }
     })
@@ -20,7 +27,7 @@ export default function (callback) {
   }
 
   this.receiveAttack = (atk) => {
-    if (this.DEAD) {
+    if (this.DEAD || this.END) {
       return
     }
 

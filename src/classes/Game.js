@@ -18,15 +18,21 @@ class Game {
   FRAME = {
     ELAPSED: 0
   }
+  END = false
 
-  constructor() {
+  constructor({ mixins = [] }) {
     this.canvas = document.querySelector('#game')
     this.context = this.canvas.getContext('2d')
+
+    mixins.forEach((mixin) => mixin[0].apply(this, mixin[1]))
   }
 
   init() {
     this.canvas.width = this.WIDTH
     this.canvas.height = this.HEIGHT
+    this.on('end', () => {
+      this.END = true
+    })
     this.draw()
   }
 
@@ -49,7 +55,7 @@ class Game {
       }),
       new FighterKenji({
         game: this,
-        position: [300, 0],
+        position: [400, 0],
         controls: {
           up: 'w',
           down: 's',
@@ -60,7 +66,35 @@ class Game {
       })
     ]
 
+    this.PLAYERS.forEach((player) =>
+      player.on('death', () => {
+        // console.log('game over')
+        this.trigger('end')
+      })
+    )
+
     this.animate()
+  }
+
+  on(eventName, handler) {
+    if (!this._eventHandlers) this._eventHandlers = {}
+    if (!this._eventHandlers[eventName]) this._eventHandlers[eventName] = []
+    this._eventHandlers[eventName].push(handler)
+    return this
+  }
+
+  off(eventName, handler) {
+    let handlers = this._eventHandlers?.[eventName]
+    if (!handlers) return
+    for (let i = 0; i < handlers.length; i++)
+      if (handlers[i] === handler) handlers.splice(i--, 1)
+  }
+
+  trigger(eventName, ...args) {
+    if (!this._eventHandlers?.[eventName]) return
+    this._eventHandlers[eventName].forEach((handler) =>
+      handler.apply(this, args)
+    )
   }
 
   canGo({ object, position, debug, reason, exclude }) {
@@ -183,6 +217,14 @@ class Game {
 
       o.draw()
     })
+
+    if (this.END) {
+      this.context.fillStyle = 'rgba(255, 255, 255, 0.2)'
+    } else {
+      this.context.fillStyle = 'rgba(255, 255, 255, 0.15)'
+    }
+
+    this.context.fillRect(0, 0, this.WIDTH, this.HEIGHT)
 
     this.ENEMIES.forEach((o, i) => {
       if (o.HEALTH <= 0) {

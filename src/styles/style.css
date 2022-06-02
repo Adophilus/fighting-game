@@ -1,4 +1,12 @@
-.game {
+@import url('./fonts.css');
+@import url('./game-text.css');
+@import url('./player-health.css');
+
+* {
+  box-sizing: border-box;
+}
+
+#gameContainer {
   position: fixed;
   transform: translate(-50%, -50%);
   top: 50%;
