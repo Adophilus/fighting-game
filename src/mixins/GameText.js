@@ -1,5 +1,19 @@
 export default function ({ element }) {
-  element.style.opacity = '0'
+  element.style.opacity = 0
+
+  this.on('init', () => {
+    element.style.opacity = 1
+    element.innerText = 'READY'
+    setTimeout(() => {
+      element.innerText = 'SET'
+      setTimeout(() => {
+        element.innerText = 'FIGHT!'
+        setTimeout(() => {
+          element.style.opacity = 0
+        }, 500)
+      }, 500)
+    }, 500)
+  })
 
   this.on('end', () => {
     if (this.PLAYERS[0].isDead()) {
@@ -10,6 +24,6 @@ export default function ({ element }) {
       element.innerText = 'GAME OVER'
     }
 
-    element.style.opacity = '1'
+    element.style.opacity = 1
   })
 }

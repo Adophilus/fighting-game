@@ -34,6 +34,7 @@ class Game {
       this.END = true
     })
     this.draw()
+    this.trigger('init')
   }
 
   start() {
@@ -42,8 +43,8 @@ class Game {
     this.NPCS = [new Background({ game: this }), new Shop({ game: this })]
 
     this.PLAYERS = [
-    // player 1
-    new FighterKenji({
+      // player 1
+      new FighterKenji({
         game: this,
         position: [100, 0],
         controls: {
@@ -54,7 +55,7 @@ class Game {
           attack: 'f'
         }
       }),
-    // player 2
+      // player 2
       new FighterSamurai({
         game: this,
         position: [this.WIDTH - 200, 0],
@@ -75,6 +76,7 @@ class Game {
       })
     )
 
+    this.trigger('start')
     this.animate()
   }
 

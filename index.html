@@ -54,6 +54,16 @@
         game.init()
         game.start()
       }
+
+      window.addEventListener('DOMContentLoaded', (event) => {
+        setTimeout(
+          () =>
+            (document.querySelector(
+              '#gameContainer .health-container'
+            ).style.opacity = 1),
+          1000
+        )
+      })
     </script>
   </body>
 </html>
