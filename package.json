@@ -1,7 +1,7 @@
 {
   "name": "@adophilus/fighting-game",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple PvP fighting game written in JavaScript",
   "main": "src/classes/Game.js",
   "scripts": {
     "dev": "vite --port 3000"
@@ -9,7 +9,15 @@
   "publishConfig": {
     "access": "public"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Adophilus/fighting-game"
+  },
+  "keywords": [
+    "javascript",
+    "web",
+    "game"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
