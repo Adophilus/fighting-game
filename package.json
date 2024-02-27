@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "vite --port 3000"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
