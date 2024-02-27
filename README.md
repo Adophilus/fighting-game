@@ -1,5 +1,4 @@
-Fighting Game
-=== 
+# Fighting Game
 
 A simple browser-based PvP game writen in JavaScript.
 
