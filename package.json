@@ -1,6 +1,6 @@
 {
 	"name": "@adophilus/fighting-game",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"description": "A simple PvP fighting game written in JavaScript",
 	"main": "src/classes/Game.js",
 	"scripts": {
