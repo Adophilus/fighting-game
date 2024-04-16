@@ -1,0 +1,24 @@
+---
+name: CI Pipeline
+on:
+  - push
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout current repo state
+        uses: actions/checkout@v3
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Active pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@8.5.1 --activate
+      - name: Install dependencies
+        run: pnpm install
+      - name: Publish to NPM
+        run: pnpm publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
