@@ -1,30 +1,26 @@
 {
-  "name": "@adophilus/fighting-game",
-  "version": "1.0.2",
-  "description": "A simple PvP fighting game written in JavaScript",
-  "main": "src/classes/Game.js",
-  "scripts": {
-    "dev": "vite --port 3000"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "homepage": "https://adophilus.github.io/fighting-game",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Adophilus/fighting-game"
-  },
-  "keywords": [
-    "javascript",
-    "web",
-    "game"
-  ],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "vite": "^5.1.4"
-  },
-  "dependencies": {
-    "tslog": "^4.9.2"
-  }
+	"name": "@adophilus/fighting-game",
+	"version": "1.0.2",
+	"description": "A simple PvP fighting game written in JavaScript",
+	"main": "src/classes/Game.js",
+	"scripts": {
+		"dev": "vite --port 3000"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"homepage": "https://adophilus.github.io/fighting-game",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Adophilus/fighting-game"
+	},
+	"keywords": ["javascript", "web", "game"],
+	"author": "Adophilus <uchenna19of@gmail.com>",
+	"license": "ISC",
+	"devDependencies": {
+		"vite": "^5.1.4"
+	},
+	"dependencies": {
+		"tslog": "^4.9.2"
+	}
 }
