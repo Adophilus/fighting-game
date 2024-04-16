@@ -10,10 +10,7 @@
 		"access": "public"
 	},
 	"homepage": "https://adophilus.github.io/fighting-game",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/Adophilus/fighting-game"
-	},
+	"repository": "https://github.com/Adophilus/fighting-game",
 	"keywords": ["javascript", "web", "game"],
 	"author": "Adophilus <uchenna19of@gmail.com>",
 	"license": "ISC",
