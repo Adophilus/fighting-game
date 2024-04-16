@@ -9,7 +9,7 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"homepage": "https://google.com",
+	"homepage": "https://adophilus.github.io/fighting-game",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/Adophilus/fighting-game"
